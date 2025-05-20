@@ -7,7 +7,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 init(autoreset=True)
-load_dotenv()
+load_dotenv('info.env')
 TOKEN = os.getenv("TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
@@ -32,7 +32,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Please send a valid text. 🚫📄")
         return
     try:
-        tts = gTTS(text=text, lang='en')  # یا 'fa' برای فارسی
+        tts = gTTS(text=text, lang='en')
         filename = f"voice_{datetime.now().timestamp()}.mp3"
         tts.save(filename)
         with open(filename, 'rb') as audio_file:
