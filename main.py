@@ -38,6 +38,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         with open(filename, 'rb') as audio_file:
             await update.message.reply_text("Here you go, kiddo 👇🏻😏")
             await update.message.reply_voice(voice=audio_file)
+            await update.message.reply_text("If you want to convert another text, just send it to me! 🗣️")
+            await update.message.reply_text("send a feedback to @tahabehroozibot please. :)")
         os.remove(filename)
     except Exception as e:
         await update.message.reply_text("Oops! Something went wrong. 🚨")
