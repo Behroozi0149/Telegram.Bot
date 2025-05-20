@@ -4,10 +4,12 @@ from gtts import gTTS
 import os
 from colorama import Fore, Style, init
 from datetime import datetime
+from dotenv import load_dotenv
 
 init(autoreset=True)
-TOKEN = '7903945210:AAHElbdlaU_7izKEpJnwWfSSAuh0Azfz67k'
-ADMIN_ID = 6076118283
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
+ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -28,20 +30,23 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     if not text.strip():
         await update.message.reply_text("Please send a valid text. 🚫📄")
-        await update.message.reply_text(":(")
         return
-    tts = gTTS(text=text, lang='en')
-    filename = "voice.mp3"
-    tts.save(filename)
-    with open(filename, 'rb') as audio_file:
-        await update.message.reply_text("Here you go, kiddo 👇🏻😏")
-        await update.message.reply_voice(voice=audio_file)
-    os.remove(filename)
+    try:
+        tts = gTTS(text=text, lang='en')  # یا 'fa' برای فارسی
+        filename = f"voice_{datetime.now().timestamp()}.mp3"
+        tts.save(filename)
+        with open(filename, 'rb') as audio_file:
+            await update.message.reply_text("Here you go, kiddo 👇🏻😏")
+            await update.message.reply_voice(voice=audio_file)
+        os.remove(filename)
+    except Exception as e:
+        await update.message.reply_text("Oops! Something went wrong. 🚨")
+        print(Fore.RED + str(e))
 
 
 if __name__ == '__main__':
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_text))
-    print(Fore.LIGHTGREEN_EX + "bot is running... 🙂⚙️" + Style.RESET_ALL)
+    print(Fore.LIGHTGREEN_EX + "Bot is running... 🙂⚙️" + Style.RESET_ALL)
     app.run_polling()
