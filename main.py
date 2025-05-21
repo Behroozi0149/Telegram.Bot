@@ -1,3 +1,4 @@
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from gtts import gTTS
@@ -5,6 +6,7 @@ import os
 from colorama import Fore, Style, init
 from datetime import datetime
 from dotenv import load_dotenv
+
 
 init(autoreset=True)
 load_dotenv('info.env')
@@ -22,7 +24,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_info += f"⏰ time: {time_now}"
     await context.bot.send_message(chat_id=ADMIN_ID, text=user_info)
     print()
-    print(Fore.LIGHTGREEN_EX + f"User {user.full_name} started the bot at {time_now}" + Style.RESET_ALL)
+    print(Fore.GREEN + f"User {user.full_name} started the bot at {time_now}" + Style.RESET_ALL)
     print()
 
 
@@ -36,10 +38,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         filename = f"voice_{datetime.now().timestamp()}.mp3"
         tts.save(filename)
         with open(filename, 'rb') as audio_file:
-            await update.message.reply_text("Here you go, kiddo 👇🏻😏")
             await update.message.reply_voice(voice=audio_file)
-            await update.message.reply_text("If you want to convert another text, just send it to me! 🗣️")
-            await update.message.reply_text("send a feedback to @tahabehroozibot please. :)")
+            await update.message.reply_text("Now you can listen to it! 🎧")
         os.remove(filename)
     except Exception as e:
         await update.message.reply_text("Oops! Something went wrong. 🚨")
