@@ -1,4 +1,4 @@
-info.env
+confidential.env
 __pycache__/
 *.pyc
 voice_*.mp3
