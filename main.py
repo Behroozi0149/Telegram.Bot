@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import datetime
 from colorama import Fore, Style, init
-import traceback, os, time
+import traceback, os
 
 init(autoreset=True)
 load_dotenv('confidential.env')
@@ -34,6 +34,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def feedback(update: Update, _: ContextTypes.DEFAULT_TYPE):
+    print('Feedback received from user:', update.effective_user.id)
     await update.message.reply_text("Please send your feedback to @tahabehroozibot 🙏")
 
 
@@ -64,13 +65,16 @@ async def handle_text(update: Update, _: ContextTypes.DEFAULT_TYPE):
         if filename.exists(): filename.unlink()
 
 
-if __name__ == '__main__':
-    print('please turn on your VPN')
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(CommandHandler('start', start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
-    app.add_handler(CommandHandler('feedback', feedback))
-    print(Fore.GREEN + "Bot is running" + Style.RESET_ALL)
-    time.sleep(1)
-    print("Press CTRL+C to exit.\n")
-    app.run_polling()
+vpn = str(input("VPN is on? yes/no: "))
+if vpn == "yes" or vpn == "Yes":
+    if __name__ == '__main__':
+        app = ApplicationBuilder().token(TOKEN).build()
+        app.add_handler(CommandHandler('start', start))
+        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+        app.add_handler(CommandHandler('feedback', feedback))
+        print(Fore.GREEN + "Bot is running" + Style.RESET_ALL)
+        print("Press CTRL+C to exit.\n")
+        app.run_polling()
+else:
+    print(Fore.RED + "Please turn on your VPN and try again." + Style.RESET_ALL)
+    exit(1)
